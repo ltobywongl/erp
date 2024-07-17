@@ -26,7 +26,7 @@ function Page() {
     () => [
       {
         accessorKey: "id",
-        header: () => <div className="text-left">編號</div>,
+        header: () => <div className="text-left">ID</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -35,16 +35,16 @@ function Page() {
         footer: (props) => props.column.id,
       },
       {
+        accessorKey: "active",
+        header: () => <div className="text-left">有效</div>,
+        footer: (props) => props.column.id,
+      },
+      {
         accessorKey: "createdAt",
         cell: (value) => {
           return new Date(value.getValue() as string).toLocaleString();
         },
-        header: () => <div className="text-left">建立時間</div>,
-        footer: (props) => props.column.id,
-      },
-      {
-        accessorKey: "usedAt",
-        header: () => <div className="text-left">使用時間</div>,
+        header: () => <div className="text-left">創建時間</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -83,7 +83,6 @@ function Page() {
           }, {} as Record<string, any>)
         ),
       });
-      console.log(queryParams.toString());
 
       const response = await fetch(`/api/coupons?${queryParams}`);
       const result = await response.json();

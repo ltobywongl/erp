@@ -1,6 +1,12 @@
 type Coupon = {
   id: string;
-  value: number;
   createdAt: string;
   usedAt: string | null;
+  coupon_categories: {
+    value: number;
+  };
+  users: {
+    id: string;
+    username: string;
+  };
 };

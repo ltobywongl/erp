@@ -7,16 +7,28 @@ const SIDE_BAR_ROUTES = [
     path: "/dashboard",
     name: "Dashboard",
     icon: <DashboardIcon />,
+    subRoutes: [],
   },
   {
     path: "/dashboard/members",
     name: "Members",
     icon: <AvatorIcon />,
+    subRoutes: [],
   },
   {
-    path: "/dashboard/coupons",
+    path: "/dashboard/coupons/associated",
     name: "Coupons",
     icon: <CouponIcon />,
+    subRoutes: [
+      {
+        name: "Categories",
+        path: "/dashboard/coupons/categories",
+      },
+      {
+        name: "Associated",
+        path: "/dashboard/coupons/associated",
+      },
+    ],
   },
 ];
 

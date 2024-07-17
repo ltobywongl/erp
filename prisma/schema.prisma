@@ -8,18 +8,90 @@ datasource db {
 }
 
 model users {
-  id        String   @id
-  username  String   @unique
-  password  String
-  role      String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  deletedAt DateTime @map("deleted_at")
+  id            String    @id @db.VarChar(36)
+  email         String?   @db.VarChar(100)
+  username      String    @unique(map: "users_unique") @db.VarChar(32)
+  password      String    @db.VarChar(100)
+  role          String    @default("user") @db.VarChar(36)
+  coupon_points Int       @default(0)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  deletedAt     DateTime? @map("deleted_at") @db.DateTime(0)
+  coupons       coupons[]
+  orders        orders[]
 }
 
 model coupons {
-  id        String    @id
-  value     Decimal
-  createdAt DateTime  @default(now()) @map("created_at")
-  usedAt    DateTime? @map("used_at")
+  id                   String            @id @db.VarChar(36)
+  user_id              String            @db.VarChar(36)
+  coupon_categories_id String            @db.VarChar(36)
+  createdAt            DateTime          @default(now()) @map("created_at") @db.DateTime(0)
+  usedAt               DateTime?         @map("used_at") @db.DateTime(0)
+  coupon_categories    coupon_categories @relation(fields: [coupon_categories_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "coupons_coupon_categories_FK")
+  users                users             @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "coupons_users_FK")
+
+  @@index([coupon_categories_id], map: "coupons_coupon_categories_FK")
+  @@index([user_id], map: "coupons_users_FK")
+}
+
+model categories {
+  id         String     @id @db.VarChar(36)
+  name       String     @db.VarChar(30)
+  created_at DateTime   @default(now()) @db.DateTime(0)
+  products   products[]
+}
+
+model coupon_categories {
+  id          String    @id @db.VarChar(36)
+  description String?   @db.VarChar(255)
+  value       Decimal   @db.Decimal(15, 2)
+  active      Boolean   @default(true)
+  created_at  DateTime  @default(now()) @db.DateTime(0)
+  updated_at  DateTime  @default(now()) @db.DateTime(0)
+  coupons     coupons[]
+}
+
+model enquiries {
+  id         String   @id @db.VarChar(36)
+  content    String   @db.Text
+  user_id    String   @db.VarChar(36)
+  created_at DateTime @default(now()) @db.DateTime(0)
+}
+
+model order_items {
+  id         String   @id @db.VarChar(36)
+  product_id String   @db.VarChar(36)
+  quantity   Int
+  created_at DateTime @default(now()) @db.DateTime(0)
+  products   products @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "order_items_products_FK")
+
+  @@index([product_id], map: "order_items_products_FK")
+}
+
+model orders {
+  id               String    @id @db.VarChar(36)
+  user_id          String    @db.VarChar(36)
+  total_price      Decimal   @db.Decimal(15, 2)
+  payment_url      String?   @db.VarChar(255)
+  payment_approved Boolean   @default(false)
+  created_at       DateTime? @default(now()) @db.DateTime(0)
+  deleted_at       DateTime? @db.DateTime(0)
+  users            users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "orders_users_FK")
+
+  @@index([user_id], map: "orders_users_FK")
+}
+
+model products {
+  id            String        @id @db.VarChar(36)
+  categories_id String        @db.VarChar(36)
+  name          String        @db.VarChar(100)
+  price         Decimal       @db.Decimal(15, 2)
+  discount      Decimal       @default(0.00) @db.Decimal(15, 2)
+  coupon_point  Int
+  created_at    DateTime      @default(now()) @db.DateTime(0)
+  updated_at    DateTime      @default(now()) @db.DateTime(0)
+  order_items   order_items[]
+  categories    categories    @relation(fields: [categories_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_categories_FK")
+
+  @@index([categories_id], map: "products_categories_FK")
 }
