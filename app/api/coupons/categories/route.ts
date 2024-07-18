@@ -43,22 +43,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch data with pagination, filtering, and sorting
-    const coupons = await prisma.coupon.findMany({
+    const coupons = await prisma.couponCategory.findMany({
       select: {
         id: true,
+        value: true,
+        active: true,
         createdAt: true,
-        usedAt: true,
-        couponCategory: {
-          select: {
-            value: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
       },
       where: whereClause,
       orderBy: orderByClause,
@@ -67,7 +57,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Get total count for pagination
-    const totalItems = await prisma.coupon.count({ where: whereClause });
+    const totalItems = await prisma.couponCategory.count({
+      where: whereClause,
+    });
 
     return NextResponse.json({
       data: coupons,

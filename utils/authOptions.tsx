@@ -14,7 +14,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials, req) {
         try {
           if (!credentials?.password || !credentials.username) return null;
-          const user = await prisma.users.findFirst({
+          const user = await prisma.user.findFirst({
             select: {
               id: true,
               username: true,
