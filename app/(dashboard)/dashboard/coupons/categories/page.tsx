@@ -9,6 +9,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
@@ -84,7 +85,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/coupons?${queryParams}`);
+      const response = await fetch(`/api/coupons/categories?${queryParams}`);
       const result = await response.json();
 
       setData(result.data);
@@ -98,15 +99,12 @@ function Page() {
   return (
     <div className="p-2">
       <div className="p-2 flex gap-4">
-        <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg">
-          新增禮卷
-        </button>
-        <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg">
-          大量新增禮卷
-        </button>
-        <button className="px-4 py-2 bg-yellow-500 text-white font-bold rounded-lg">
-          使用禮卷
-        </button>
+        <Link
+          href={"/dashboard/coupons/categories/create"}
+          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+        >
+          新增禮卷種類
+        </Link>
       </div>
       <table className="w-full">
         <thead>

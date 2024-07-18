@@ -44,6 +44,7 @@ export default function NavigationHandler({
             {SIDE_BAR_ROUTES.map((route, index) => {
               return route.subRoutes.length > 0 ? (
                 <Accordion.Item
+                  key={`route-${index}`}
                   value={`route-${index}`}
                   className="text-xs md:text-sm AccordionItem text-center"
                 >
@@ -68,6 +69,7 @@ export default function NavigationHandler({
                 </Accordion.Item>
               ) : (
                 <Accordion.Item
+                  key={`route-${index}`}
                   value={`route-${index}`}
                   className="text-xs md:text-sm border-b AccordionItem"
                 >

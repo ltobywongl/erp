@@ -48,6 +48,7 @@ model Category {
 
 model CouponCategory {
   id          String   @id @db.VarChar(36)
+  name        String   @db.VarChar(20)
   description String?  @db.VarChar(255)
   value       Decimal  @db.Decimal(15, 2)
   active      Boolean  @default(true)

@@ -22,6 +22,10 @@ main > div {
   @apply h-full flex-1;
 }
 
+form > div > input {
+  @apply flex w-full border border-slate-300 rounded-md shadow-sm px-3 py-1 focus-visible:outline-none focus-visible:ring-1 text-sm;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 10px;
 }
