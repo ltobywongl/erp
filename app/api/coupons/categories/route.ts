@@ -20,9 +20,12 @@ export async function GET(request: NextRequest) {
       try {
         const filterObj = JSON.parse(filters);
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
-          if (typeof value === "string") {
+          if (key === "value") {
+            acc["value"] = { equals: Number(value) };
+          } else {
             acc[key] = { contains: value };
           }
+
           return acc;
         }, {} as Record<string, any>);
       } catch (error) {
@@ -46,6 +49,7 @@ export async function GET(request: NextRequest) {
     const coupons = await prisma.couponCategory.findMany({
       select: {
         id: true,
+        name: true,
         value: true,
         active: true,
         createdAt: true,

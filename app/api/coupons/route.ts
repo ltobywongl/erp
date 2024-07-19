@@ -15,16 +15,23 @@ export async function GET(request: NextRequest) {
 
   try {
     // Prepare the where clause for filtering
-    let whereClause = {};
+    let whereClause: any = {};
     if (filters) {
       try {
         const filterObj = JSON.parse(filters);
-        whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
-          if (typeof value === "string") {
-            acc[key] = { contains: value };
+        Object.entries(filterObj).forEach(([key, value]) => {
+          if (key === "value") {
+            whereClause.couponCategory = {
+              value: { equals: Number(value) },
+            };
+          } else if (key === "username") {
+            whereClause.user = {
+              username: { contains: value },
+            };
+          } else {
+            whereClause[key] = { contains: value };
           }
-          return acc;
-        }, {} as Record<string, any>);
+        });
       } catch (error) {
         console.error("Error parsing filters", error);
       }
@@ -33,9 +40,19 @@ export async function GET(request: NextRequest) {
     // Prepare the orderBy clause for sorting
     let orderByClause = {};
     if (sortBy && sortOrder) {
-      orderByClause = {
-        [sortBy]: sortOrder,
-      };
+      if (sortBy === "value") {
+        orderByClause = {
+          couponCategory: { [sortBy]: sortOrder },
+        };
+      } else if (sortBy === "username") {
+        orderByClause = {
+          user: { [sortBy]: sortOrder },
+        };
+      } else {
+        orderByClause = {
+          [sortBy]: sortOrder,
+        };
+      }
     } else {
       orderByClause = {
         createdAt: "desc",

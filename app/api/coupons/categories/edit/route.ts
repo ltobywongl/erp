@@ -15,28 +15,35 @@ export async function POST(request: NextRequest) {
 
     const rawFormData = await request.formData();
     const formData = {
+      id: rawFormData.get("id"),
       name: rawFormData.get("name"),
       description: rawFormData.get("description"),
       value: rawFormData.get("value"),
+      active: rawFormData.get("active"),
       point: rawFormData.get("point"),
     };
 
     if (
+      !formData.id ||
       !formData.name ||
       !formData.description ||
       !formData.value ||
-      !formData.point
+      !formData.point ||
+      formData.active === undefined
     ) {
       return errorResponse("Bad Request", 400);
     }
 
-    await prisma.couponCategory.create({
+    await prisma.couponCategory.update({
       data: {
-        id: uuid(),
         name: formData.name as string,
         point: parseInt(formData.point as string),
         description: formData.description as string,
+        active: Boolean(formData.active),
         value: parseFloat(formData.value as string),
+      },
+      where: {
+        id: formData.id as string,
       },
     });
 

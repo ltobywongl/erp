@@ -50,7 +50,8 @@ model CouponCategory {
   id          String   @id @db.VarChar(36)
   name        String   @db.VarChar(20)
   description String?  @db.VarChar(255)
-  value       Decimal  @db.Decimal(15, 2)
+  value       Float
+  point       Int      @db.Int
   active      Boolean  @default(true)
   createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
@@ -82,7 +83,7 @@ model OrderItem {
 model Order {
   id              String    @id @db.VarChar(36)
   userId          String    @map("user_id") @db.VarChar(36)
-  totalPrice      Decimal   @map("total_price") @db.Decimal(15, 2)
+  totalPrice      Float     @map("total_price")
   paymentUrl      String?   @map("payment_url") @db.VarChar(255)
   paymentApproved Boolean   @default(false) @map("payment_approved")
   createdAt       DateTime  @default(now()) @map("created_at") @db.DateTime(0)
@@ -97,8 +98,8 @@ model Product {
   id          String      @id @db.VarChar(36)
   categoryId  String      @map("categories_id") @db.VarChar(36)
   name        String      @db.VarChar(100)
-  price       Decimal     @db.Decimal(15, 2)
-  discount    Decimal     @default(0.00) @db.Decimal(15, 2)
+  price       Float
+  discount    Float       @default(0.00)
   couponPoint Int         @map("coupon_point")
   createdAt   DateTime    @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)

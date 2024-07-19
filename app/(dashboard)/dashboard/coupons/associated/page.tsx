@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingSpinner from "@/components/ui/spinner";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -9,10 +10,12 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
   const [data, setData] = useState<Coupon[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [pagination, setPagination] = useState<PaginationState>({
@@ -31,13 +34,13 @@ function Page() {
       },
       {
         id: "username",
-        accessorFn: (row) => `${row.users.id}`,
+        accessorFn: (row) => `${row.user.id}`,
         header: () => <div className="text-left">會員</div>,
         footer: (props) => props.column.id,
       },
       {
         id: "value",
-        accessorFn: (row) => `${row.coupon_categories.value}`,
+        accessorFn: (row) => `${row.couponCategory.value}`,
         header: () => <div className="text-left">價值</div>,
         footer: (props) => props.column.id,
       },
@@ -78,6 +81,7 @@ function Page() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const queryParams = new URLSearchParams({
         page: (pagination.pageIndex + 1).toString(),
         pageSize: pagination.pageSize.toString(),
@@ -94,6 +98,7 @@ function Page() {
       const response = await fetch(`/api/coupons?${queryParams}`);
       const result = await response.json();
 
+      setIsLoading(false);
       setData(result.data);
       setTotalPages(result.totalPages);
       setTotalItems(result.totalItems);
@@ -104,91 +109,104 @@ function Page() {
 
   return (
     <div className="p-2">
-      <div className="p-2 flex gap-4">
-        <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg">
+      {/* <div className="p-2 flex gap-4">
+        <Link
+          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+          href={"/dashboard/coupons/create"}
+        >
           新增禮卷
-        </button>
-        <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg">
-          大量新增禮卷
-        </button>
-        <button className="px-4 py-2 bg-yellow-500 text-white font-bold rounded-lg">
-          使用禮卷
-        </button>
-      </div>
-      <table className="w-full">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <th className="p-0" key={header.id} colSpan={header.colSpan}>
-                    <div>
-                      <div
-                        className={`bg-slate-100 p-2 border-b ${
-                          header.column.getCanSort()
-                            ? "cursor-pointer select-none"
-                            : ""
-                        }`}
-                        onClick={() => header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: " 🔼",
-                          desc: " 🔽",
-                        }[header.column.getIsSorted() as string] ?? null}
-                      </div>
-                      {header.column.getCanFilter() ? (
-                        <div className="p-2 border-b">
-                          <input
-                            className="border w-full rounded px-2 py-1 font-normal"
-                            placeholder="Filter"
-                            type="text"
-                            onChange={(e) =>
-                              header.column.setFilterValue(e.target.value)
-                            }
-                          />
+        </Link>
+      </div> */}
+      <div className="overflow-x-scroll">
+        <table className="w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
+                      className="p-0"
+                      key={header.id}
+                      colSpan={header.colSpan}
+                    >
+                      <div>
+                        <div
+                          className={`bg-slate-100 p-2 border-b ${
+                            header.column.getCanSort()
+                              ? "cursor-pointer select-none"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            header.column.getToggleSortingHandler()
+                          }
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: " 🔼",
+                            desc: " 🔽",
+                          }[header.column.getIsSorted() as string] ?? null}
                         </div>
-                      ) : null}
-                    </div>
-                  </th>
-                );
-              })}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.length ? (
-            table.getRowModel().rows.map((row) => {
-              return (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => {
-                    return (
-                      <td className="p-2 border-b" key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                        {header.column.getCanFilter() ? (
+                          <div className="p-2 border-b">
+                            <input
+                              className="border w-full rounded px-2 py-1 font-normal"
+                              placeholder="Filter"
+                              type="text"
+                              onChange={(e) =>
+                                header.column.setFilterValue(e.target.value)
+                              }
+                            />
+                          </div>
+                        ) : (
+                          <div className="p-2 border-b h-[51px]"></div>
                         )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })
-          ) : (
-            <tr>
-              <td
-                className="py-2 text-center font-bold text-xl border-b"
-                colSpan={5}
-              >
-                沒有合適的欄
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+                      </div>
+                    </th>
+                  );
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map((row) => {
+                return (
+                  <tr key={row.id}>
+                    {row.getVisibleCells().map((cell) => {
+                      return (
+                        <td className="p-2 border-b" key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
+            ) : isLoading ? (
+              <tr>
+                <td className="py-2 border-b" colSpan={5}>
+                  <LoadingSpinner />
+                </td>
+              </tr>
+            ) : (
+              <tr>
+                <td
+                  className="py-2 text-center font-bold text-xl border-b"
+                  colSpan={5}
+                >
+                  沒有合適的欄
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="h-2" />
       <div>
         <div className="w-full flex justify-between gap-4">
