@@ -2,7 +2,7 @@ import { authOptions } from "@/utils/authOptions";
 import { errorResponse, successResponse } from "@/utils/httpResponse";
 import prisma from "@/utils/prisma";
 import { getServerSession } from "next-auth/next";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,36 +16,27 @@ export async function POST(request: NextRequest) {
     const formData = {
       id: rawFormData.get("id"),
       name: rawFormData.get("name"),
-      description: rawFormData.get("description"),
-      value: rawFormData.get("value"),
-      active: rawFormData.get("active"),
-      point: rawFormData.get("point"),
+      discount: rawFormData.get("discount"),
       delete: rawFormData.get("delete"),
     };
 
     if (
-      !formData.id ||
       !formData.name ||
-      !formData.description ||
-      !formData.value ||
-      !formData.point ||
-      formData.active === undefined ||
+      !formData.id ||
+      !formData.discount ||
       formData.delete === undefined
     ) {
       return errorResponse("Bad Request", 400);
     }
 
-    await prisma.couponCategory.update({
+    await prisma.category.update({
       data: {
         name: formData.name as string,
-        point: parseInt(formData.point as string),
-        description: formData.description as string,
-        active: Boolean(formData.active),
-        value: parseFloat(formData.value as string),
+        discount: parseFloat(formData.discount as string),
         deletedAt: formData.delete ? new Date() : null,
       },
       where: {
-        id: formData.id as string,
+        id: rawFormData.get("id") as string,
       },
     });
 

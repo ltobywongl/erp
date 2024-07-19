@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id           String    @id @db.VarChar(36)
-  email        String?   @db.VarChar(100)
+  email        String    @unique @db.VarChar(100)
   username     String    @unique(map: "users_unique") @db.VarChar(32)
   password     String    @db.VarChar(100)
   role         String    @default("user") @db.VarChar(36)
@@ -40,21 +40,24 @@ model Coupon {
 model Category {
   id        String    @id @db.VarChar(36)
   name      String    @db.VarChar(30)
+  discount  Float     @default(0.00)
   createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  deletedAt DateTime? @map("deleted_at")
   products  Product[]
 
   @@map("categories")
 }
 
 model CouponCategory {
-  id          String   @id @db.VarChar(36)
-  name        String   @db.VarChar(20)
-  description String?  @db.VarChar(255)
+  id          String    @id @db.VarChar(36)
+  name        String    @db.VarChar(20)
+  description String?   @db.VarChar(255)
   value       Float
-  point       Int      @db.Int
-  active      Boolean  @default(true)
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  point       Int       @db.Int
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.DateTime(0)
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  deletedAt   DateTime? @map("deleted_at")
   coupons     Coupon[]
 
   @@map("coupon_categories")
@@ -103,6 +106,7 @@ model Product {
   couponPoint Int         @map("coupon_point")
   createdAt   DateTime    @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
+  deletedAt   DateTime?   @map("deleted_at")
   orderItems  OrderItem[]
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_categories_FK")
 

@@ -1,7 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/utils/prisma";
+import { errorResponse } from "@/utils/httpResponse";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/utils/authOptions";
 
 export async function GET(request: NextRequest) {
+  const user = await getServerSession(authOptions);
+
+  if (!user?.user.role || user.user.role !== "admin") {
+    return errorResponse("Unauthorized", 401);
+  }
+  
   const searchParams = request.nextUrl.searchParams;
   const page = searchParams.get("page")
     ? parseInt(searchParams.get("page")!, 10)
@@ -42,7 +51,7 @@ export async function GET(request: NextRequest) {
     if (sortBy && sortOrder) {
       if (sortBy === "value") {
         orderByClause = {
-          couponCategory: { [sortBy]: sortOrder },
+          couponCategory: { value: sortOrder },
         };
       } else if (sortBy === "username") {
         orderByClause = {
@@ -94,7 +103,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Request error", error);
     return NextResponse.json(
-      { error: "Error fetching coupons" },
+      { error: "Error fetching coupons", data: [], totalPages: 0, totalItems: 0 },
       { status: 500 }
     );
   }

@@ -1,13 +1,13 @@
 "use client";
 import LoadingSpinner from "@/components/ui/spinner";
-import { CouponCategory } from "@prisma/client";
+import { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function Form({
-  couponCategory,
+  category,
 }: {
-  couponCategory?: CouponCategory;
+  category?: Partial<Category>;
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,7 @@ export default function Form({
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
-    const response = await fetch("/api/coupons/categories/edit", {
+    const response = await fetch("/api/products/categories/edit", {
       method: "POST",
       body: formData,
     });
@@ -25,7 +25,7 @@ export default function Form({
     if (!response.ok) {
       setError(data.error);
     } else {
-      router.push("/dashboard/coupons/categories");
+      router.push("/dashboard/products/categories");
     }
     setIsLoading(false);
   }
@@ -36,14 +36,14 @@ export default function Form({
         className="w-2/3 h-2/3 p-6 border border-slate-300 rounded-md flex flex-col gap-4 overflow-y-scroll custom-scrollbar"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <h1 className="text-2xl font-bold">Edit Coupon Category</h1>
+        <h1 className="text-2xl font-bold">Edit Product Category</h1>
         <div>
           <label htmlFor="id">Id</label>
           <input
             id="id"
             name="id"
             type="text"
-            defaultValue={couponCategory?.id}
+            defaultValue={category?.id}
           />
         </div>
         <div>
@@ -52,48 +52,18 @@ export default function Form({
             id="name"
             name="name"
             type="text"
-            defaultValue={couponCategory?.name}
+            defaultValue={category?.name}
           />
         </div>
         <div>
-          <label htmlFor="description">Description</label>
+          <label htmlFor="discount">Discount</label>
           <input
-            id="description"
-            name="description"
-            type="text"
-            defaultValue={couponCategory?.description ?? ""}
-          />
-        </div>
-        <div>
-          <label htmlFor="value">Value</label>
-          <input
-            id="value"
-            name="value"
+            id="discount"
+            name="discount"
             type="number"
             step="0.01"
-            defaultValue={Number(couponCategory?.value) ?? 0}
+            defaultValue={Number(category?.discount) ?? 0}
           />
-        </div>
-        <div>
-          <label htmlFor="point">Point(s) to exchange</label>
-          <input
-            id="point"
-            name="point"
-            type="number"
-            step="0.01"
-            defaultValue={couponCategory?.point}
-          />
-        </div>
-        <div>
-          <label htmlFor="active">Active</label>
-          <div>
-            <input
-              id="active"
-              name="active"
-              type="checkbox"
-              defaultChecked={couponCategory?.active === true}
-            />
-          </div>
         </div>
         <div>
           <label htmlFor="delete">Delete this category</label>
@@ -102,7 +72,7 @@ export default function Form({
               id="delete"
               name="delete"
               type="checkbox"
-              defaultChecked={couponCategory?.deletedAt ? true : false}
+              defaultChecked={category?.deletedAt ? true : false}
             />
           </div>
         </div>

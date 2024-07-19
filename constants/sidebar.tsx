@@ -1,6 +1,7 @@
 import AvatorIcon from "@/ui/icons/avatar";
 import CouponIcon from "@/ui/icons/coupon";
 import DashboardIcon from "@/ui/icons/dashboard";
+import ProductIcon from "@/ui/icons/product";
 
 const SIDE_BAR_ROUTES = [
   {
@@ -27,6 +28,21 @@ const SIDE_BAR_ROUTES = [
       {
         name: "Associated",
         path: "/dashboard/coupons/associated",
+      },
+    ],
+  },
+  {
+    path: "/dashboard/products",
+    name: "Products",
+    icon: <ProductIcon />,
+    subRoutes: [
+      {
+        name: "Categories",
+        path: "/dashboard/products/categories",
+      },
+      {
+        name: "Products",
+        path: "/dashboard/products",
       },
     ],
   },

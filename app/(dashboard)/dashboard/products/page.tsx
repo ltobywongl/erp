@@ -14,7 +14,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
-  const [data, setData] = useState<Coupon[]>([]);
+  const [data, setData] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
@@ -25,26 +25,32 @@ function Page() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const columns = useMemo<ColumnDef<Coupon>[]>(
+  const columns = useMemo<ColumnDef<Product>[]>(
     () => [
+    {
+        accessorKey: "categoryName",
+        accessorFn: (row) => `${row.category.name}`,
+        header: () => <div className="text-left">種類</div>,
+        footer: (props) => props.column.id,
+    },
       {
-        accessorKey: "id",
-        header: () => <div className="text-left">ID</div>,
+        accessorKey: "name",
+        header: () => <div className="text-left">名稱</div>,
         footer: (props) => props.column.id,
       },
       {
-        id: "username",
-        accessorFn: (row) => `${row.user.username}`,
-        cell: (value) => {
-          return <span>{value.row.original.user.username}</span>;
-        },
-        header: () => <div className="text-left">會員</div>,
+        accessorKey: "price",
+        header: () => <div className="text-left">價格</div>,
         footer: (props) => props.column.id,
       },
       {
-        id: "value",
-        accessorFn: (row) => `${row.couponCategory.value}`,
-        header: () => <div className="text-left">價值</div>,
+        accessorKey: "discount",
+        header: () => <div className="text-left">折扣金額</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "couponPoint",
+        header: () => <div className="text-left">賺取積分</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -56,9 +62,18 @@ function Page() {
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "usedAt",
-        accessorFn: (row) => `${row.usedAt || "-"}`,
-        header: () => <div className="text-left">使用時間</div>,
+        accessorKey: "id",
+        cell: (value) => {
+          return (
+            <Link
+              href={`/dashboard/products/edit/${value.getValue()}`}
+            >
+              Edit
+            </Link>
+          );
+        },
+        enableColumnFilter: false,
+        header: () => <div className="text-left">修改</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -99,7 +114,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/coupons?${queryParams}`);
+      const response = await fetch(`/api/products?${queryParams}`);
       const result = await response.json();
 
       setIsLoading(false);
@@ -113,14 +128,14 @@ function Page() {
 
   return (
     <div className="p-2">
-      {/* <div className="p-2 flex gap-4">
+      <div className="p-2 flex gap-4">
         <Link
+          href={"/dashboard/products/create"}
           className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
-          href={"/dashboard/coupons/create"}
         >
-          新增禮卷
+          新增商品
         </Link>
-      </div> */}
+      </div>
       <div className="overflow-x-scroll">
         <table className="w-full">
           <thead>
@@ -175,7 +190,7 @@ function Page() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.length ? (
+            {table.getRowModel().rows && table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => {
                 return (
                   <tr key={row.id}>
@@ -194,7 +209,7 @@ function Page() {
               })
             ) : isLoading ? (
               <tr>
-                <td className="py-2 border-b" colSpan={5}>
+                <td className="py-2 border-b" colSpan={7}>
                   <LoadingSpinner />
                 </td>
               </tr>
@@ -202,7 +217,7 @@ function Page() {
               <tr>
                 <td
                   className="py-2 text-center font-bold text-xl border-b"
-                  colSpan={5}
+                  colSpan={7}
                 >
                   沒有合適的欄
                 </td>
@@ -211,6 +226,7 @@ function Page() {
           </tbody>
         </table>
       </div>
+
       <div className="h-2" />
       <div>
         <div className="w-full flex justify-between gap-4">

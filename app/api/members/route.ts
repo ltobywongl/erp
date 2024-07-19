@@ -29,8 +29,8 @@ export async function GET(request: NextRequest) {
       try {
         const filterObj = JSON.parse(filters);
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
-          if (key === "value") {
-            acc["value"] = { equals: Number(value) };
+          if (key === "couponPoints") {
+            acc["couponPoints"] = { equals: Number(value) };
           } else {
             acc[key] = { contains: value };
           }
@@ -56,12 +56,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch data with pagination, filtering, and sorting
-    const coupons = await prisma.couponCategory.findMany({
+    const coupons = await prisma.user.findMany({
       select: {
         id: true,
-        name: true,
-        value: true,
-        active: true,
+        username: true,
+        email: true,
+        couponPoints: true,
         createdAt: true,
       },
       where: whereClause,
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Request error", error);
     return NextResponse.json(
-      { error: "Error fetching coupon categories", data: [], totalPages: 0, totalItems: 0 },
+      { error: "Error fetching coupons", data: [], totalPages: 0, totalItems: 0 },
       { status: 500 }
     );
   }

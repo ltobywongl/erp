@@ -28,23 +28,18 @@ function Page() {
   const columns = useMemo<ColumnDef<Coupon>[]>(
     () => [
       {
-        accessorKey: "id",
-        header: () => <div className="text-left">ID</div>,
+        accessorKey: "username",
+        header: () => <div className="text-left">名稱</div>,
         footer: (props) => props.column.id,
       },
       {
-        id: "username",
-        accessorFn: (row) => `${row.user.username}`,
-        cell: (value) => {
-          return <span>{value.row.original.user.username}</span>;
-        },
-        header: () => <div className="text-left">會員</div>,
+        accessorKey: "email",
+        header: () => <div className="text-left">電郵</div>,
         footer: (props) => props.column.id,
       },
       {
-        id: "value",
-        accessorFn: (row) => `${row.couponCategory.value}`,
-        header: () => <div className="text-left">價值</div>,
+        accessorKey: "couponPoints",
+        header: () => <div className="text-left">積分</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -56,9 +51,18 @@ function Page() {
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "usedAt",
-        accessorFn: (row) => `${row.usedAt || "-"}`,
-        header: () => <div className="text-left">使用時間</div>,
+        accessorKey: "id",
+        cell: (value) => {
+          return (
+            <Link
+              href={`/dashboard/members/edit/${value.getValue()}`}
+            >
+              Edit
+            </Link>
+          );
+        },
+        enableColumnFilter: false,
+        header: () => <div className="text-left">修改</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -99,7 +103,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/coupons?${queryParams}`);
+      const response = await fetch(`/api/members?${queryParams}`);
       const result = await response.json();
 
       setIsLoading(false);
@@ -115,10 +119,10 @@ function Page() {
     <div className="p-2">
       {/* <div className="p-2 flex gap-4">
         <Link
+          href={"/dashboard/coupons/categories/create"}
           className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
-          href={"/dashboard/coupons/create"}
         >
-          新增禮卷
+          新增禮卷種類
         </Link>
       </div> */}
       <div className="overflow-x-scroll">
@@ -175,7 +179,7 @@ function Page() {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.length ? (
+            {table.getRowModel().rows && table.getRowModel().rows.length ? (
               table.getRowModel().rows.map((row) => {
                 return (
                   <tr key={row.id}>
@@ -211,6 +215,7 @@ function Page() {
           </tbody>
         </table>
       </div>
+
       <div className="h-2" />
       <div>
         <div className="w-full flex justify-between gap-4">
