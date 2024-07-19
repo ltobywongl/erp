@@ -101,6 +101,8 @@ model Product {
   id          String      @id @db.VarChar(36)
   categoryId  String      @map("categories_id") @db.VarChar(36)
   name        String      @db.VarChar(100)
+  description String?     @db.VarChar(255)
+  image       String?     @db.VarChar(255)
   price       Float
   discount    Float       @default(0.00)
   couponPoint Int         @map("coupon_point")
