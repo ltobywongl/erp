@@ -9,7 +9,7 @@ datasource db {
 
 model User {
   id           String    @id @db.VarChar(36)
-  email        String    @unique @db.VarChar(100)
+  email        String    @unique(map: "users_unique_1") @db.VarChar(100)
   username     String    @unique(map: "users_unique") @db.VarChar(32)
   password     String    @db.VarChar(100)
   role         String    @default("user") @db.VarChar(36)
@@ -20,6 +20,7 @@ model User {
   deletedAt    DateTime? @map("deleted_at") @db.DateTime(0)
   coupons      Coupon[]
   orders       Order[]
+  topups       topups[]
 
   @@map("users")
 }
@@ -43,7 +44,7 @@ model Category {
   name      String    @db.VarChar(30)
   discount  Float     @default(0.00)
   createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(0)
-  deletedAt DateTime? @map("deleted_at")
+  deletedAt DateTime? @map("deleted_at") @db.DateTime(0)
   products  Product[]
 
   @@map("categories")
@@ -51,14 +52,14 @@ model Category {
 
 model CouponCategory {
   id          String    @id @db.VarChar(36)
-  name        String    @db.VarChar(20)
+  name        String?   @db.VarChar(20)
   description String?   @db.VarChar(255)
-  value       Float
-  point       Int       @db.Int
-  active      Boolean   @default(true)
+  point       Int
+  value       Decimal   @db.Decimal(15, 2)
+  active      Boolean   @default(false)
   createdAt   DateTime  @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
-  deletedAt   DateTime? @map("deleted_at")
+  deletedAt   DateTime? @map("deleted_at") @db.DateTime(0)
   coupons     Coupon[]
 
   @@map("coupon_categories")
@@ -110,10 +111,23 @@ model Product {
   couponPoint Int         @map("coupon_point")
   createdAt   DateTime    @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt   DateTime    @default(now()) @updatedAt @map("updated_at") @db.DateTime(0)
-  deletedAt   DateTime?   @map("deleted_at")
+  deletedAt   DateTime?   @map("deleted_at") @db.DateTime(0)
   orderItems  OrderItem[]
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "products_categories_FK")
 
   @@index([categoryId], map: "products_categories_FK")
   @@map("products")
+}
+
+model topups {
+  id         String   @id @db.VarChar(36)
+  user_id    String   @db.VarChar(36)
+  amount     Float
+  image_path String   @db.VarChar(100)
+  approved   Boolean  @default(false)
+  created_at DateTime @default(now()) @db.DateTime(0)
+  updated_at DateTime @default(now()) @db.DateTime(0)
+  users      User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "topups_users_FK")
+
+  @@index([user_id], map: "topups_users_FK")
 }
