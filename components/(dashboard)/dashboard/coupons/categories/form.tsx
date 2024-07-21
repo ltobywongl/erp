@@ -1,6 +1,7 @@
 "use client";
 import LoadingSpinner from "@/components/ui/spinner";
-import { useRouter } from 'next/navigation'
+import { LineChart } from "@mui/x-charts/LineChart";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 export default function Form() {

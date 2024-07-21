@@ -1,6 +1,7 @@
 import AvatorIcon from "@/ui/icons/avatar";
 import CouponIcon from "@/ui/icons/coupon";
 import DashboardIcon from "@/ui/icons/dashboard";
+import EnquiryIcon from "@/ui/icons/enquiry";
 import ProductIcon from "@/ui/icons/product";
 
 const SIDE_BAR_ROUTES = [
@@ -45,6 +46,12 @@ const SIDE_BAR_ROUTES = [
         path: "/dashboard/products",
       },
     ],
+  },
+  {
+    path: "/dashboard/enquiries",
+    name: "Enquiries",
+    icon: <EnquiryIcon />,
+    subRoutes: [],
   },
 ];
 
