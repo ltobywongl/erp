@@ -23,6 +23,7 @@ export const authOptions: NextAuthOptions = {
             },
             where: {
               username: credentials?.username,
+              role: "admin",
             },
           });
           if (!user) return null;
