@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Get total count for pagination
-    const totalItems = await prisma.coupon.count({ where: whereClause });
+    const totalItems = await prisma.product.count({ where: whereClause });
 
     return NextResponse.json({
       data: coupons,

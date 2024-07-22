@@ -52,7 +52,7 @@ export default function Form({
             id="name"
             name="name"
             type="text"
-            defaultValue={couponCategory?.name}
+            defaultValue={couponCategory?.name ?? ""}
           />
         </div>
         <div>

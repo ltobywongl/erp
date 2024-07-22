@@ -29,14 +29,18 @@ export async function GET(request: NextRequest) {
       try {
         const filterObj = JSON.parse(filters);
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
-          acc[key] = { contains: value };
+          if (key === "done") {
+            acc["done"] = { equals: value === "1" || value === "true" || value === true };
+          } else {
+            acc[key] = { contains: value };
+          }
+
           return acc;
         }, {} as Record<string, any>);
       } catch (error) {
         console.error("Error parsing filters", error);
       }
     }
-    whereClause.deletedAt = null;
 
     // Prepare the orderBy clause for sorting
     let orderByClause = {};
@@ -51,11 +55,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch data with pagination, filtering, and sorting
-    const coupons = await prisma.category.findMany({
+    const coupons = await prisma.enquiry.findMany({
       select: {
         id: true,
-        name: true,
-        discount: true,
+        email: true,
+        content: true,
+        done: true,
         createdAt: true,
       },
       where: whereClause,
@@ -65,7 +70,7 @@ export async function GET(request: NextRequest) {
     });
 
     // Get total count for pagination
-    const totalItems = await prisma.category.count({
+    const totalItems = await prisma.enquiry.count({
       where: whereClause,
     });
 
@@ -78,7 +83,7 @@ export async function GET(request: NextRequest) {
     console.error("Request error", error);
     return NextResponse.json(
       {
-        error: "Error fetching product categories",
+        error: "Error fetching coupons",
         data: [],
         totalPages: 0,
         totalItems: 0,
