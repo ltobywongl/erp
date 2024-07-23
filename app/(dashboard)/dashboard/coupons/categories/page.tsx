@@ -38,6 +38,11 @@ function Page() {
         footer: (props) => props.column.id,
       },
       {
+        accessorKey: "stock",
+        header: () => <div className="text-left">貨存</div>,
+        footer: (props) => props.column.id,
+      },
+      {
         accessorKey: "active",
         header: () => <div className="text-left">有效</div>,
         footer: (props) => props.column.id,
@@ -139,14 +144,12 @@ function Page() {
                     >
                       <div>
                         <div
-                          className={`bg-slate-100 p-2 border-b ${
+                          className={`flex bg-slate-100 p-2 border-b ${
                             header.column.getCanSort()
                               ? "cursor-pointer select-none"
                               : ""
                           }`}
-                          onClick={() =>
-                            header.column.getToggleSortingHandler()
-                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -159,14 +162,24 @@ function Page() {
                         </div>
                         {header.column.getCanFilter() ? (
                           <div className="p-2 border-b">
-                            <input
-                              className="border w-full rounded px-2 py-1 font-normal"
-                              placeholder="Filter"
-                              type="text"
-                              onChange={(e) =>
-                                header.column.setFilterValue(e.target.value)
-                              }
-                            />
+                            {header.column.id === "createdAt" ? (
+                              <input
+                                className="border w-full rounded px-2 py-1 font-normal"
+                                type="date"
+                                onChange={(e) =>
+                                  header.column.setFilterValue(e.target.value)
+                                }
+                              />
+                            ) : (
+                              <input
+                                className="border w-full rounded px-2 py-1 font-normal"
+                                placeholder="Filter"
+                                type="text"
+                                onChange={(e) =>
+                                  header.column.setFilterValue(e.target.value)
+                                }
+                              />
+                            )}
                           </div>
                         ) : (
                           <div className="p-2 border-b h-[51px]"></div>

@@ -29,7 +29,12 @@ export async function GET(request: NextRequest) {
       try {
         const filterObj = JSON.parse(filters);
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
-          acc[key] = { contains: value };
+          if (key === "createdAt") {
+            acc["createdAt"] = {
+              gt: new Date(`${value} 00:00:00`),
+              lt: new Date(`${value} 23:59:59`),
+            };
+          } else acc[key] = { contains: value };
           return acc;
         }, {} as Record<string, any>);
       } catch (error) {

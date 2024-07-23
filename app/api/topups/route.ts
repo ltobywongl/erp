@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   if (!user?.user.role || user.user.role !== "admin") {
     return errorResponse("Unauthorized", 401);
   }
-  
+
   const searchParams = request.nextUrl.searchParams;
   const page = searchParams.get("page")
     ? parseInt(searchParams.get("page")!, 10)
@@ -28,24 +28,25 @@ export async function GET(request: NextRequest) {
     if (filters) {
       try {
         const filterObj = JSON.parse(filters);
-        Object.entries(filterObj).forEach(([key, value]) => {
-          if (key === "value") {
-            whereClause.couponCategory = {
-              value: { equals: Number(value) },
-            };
-          } else if (key === "username") {
-            whereClause.user = {
-              username: { contains: value },
+        whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
+          if (key === "approved") {
+            acc["approved"] = {
+              equals:
+                value === "1" ||
+                "true".includes(String(value)) ||
+                value === true,
             };
           } else if (key === "createdAt") {
-            whereClause.createdAt = {
+            acc["createdAt"] = {
               gt: new Date(`${value} 00:00:00`),
               lt: new Date(`${value} 23:59:59`),
             };
           } else {
-            whereClause[key] = { contains: value };
+            acc[key] = { contains: value };
           }
-        });
+
+          return acc;
+        }, {} as Record<string, any>);
       } catch (error) {
         console.error("Error parsing filters", error);
       }
@@ -54,19 +55,9 @@ export async function GET(request: NextRequest) {
     // Prepare the orderBy clause for sorting
     let orderByClause = {};
     if (sortBy && sortOrder) {
-      if (sortBy === "value") {
-        orderByClause = {
-          couponCategory: { value: sortOrder },
-        };
-      } else if (sortBy === "username") {
-        orderByClause = {
-          user: { [sortBy]: sortOrder },
-        };
-      } else {
-        orderByClause = {
-          [sortBy]: sortOrder,
-        };
-      }
+      orderByClause = {
+        [sortBy]: sortOrder,
+      };
     } else {
       orderByClause = {
         createdAt: "desc",
@@ -74,22 +65,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch data with pagination, filtering, and sorting
-    const coupons = await prisma.coupon.findMany({
+    const coupons = await prisma.topup.findMany({
       select: {
         id: true,
+        amount: true,
+        imagePath: true,
+        approved: true,
         createdAt: true,
-        usedAt: true,
-        couponCategory: {
-          select: {
-            value: true,
-          },
-        },
-        user: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
       },
       where: whereClause,
       orderBy: orderByClause,
@@ -98,7 +80,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Get total count for pagination
-    const totalItems = await prisma.coupon.count({ where: whereClause });
+    const totalItems = await prisma.topup.count({
+      where: whereClause,
+    });
 
     return NextResponse.json({
       data: coupons,
@@ -108,7 +92,12 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Request error", error);
     return NextResponse.json(
-      { error: "Error fetching coupons", data: [], totalPages: 0, totalItems: 0 },
+      {
+        error: "Error fetching coupons",
+        data: [],
+        totalPages: 0,
+        totalItems: 0,
+      },
       { status: 500 }
     );
   }

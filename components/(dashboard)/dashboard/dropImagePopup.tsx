@@ -42,7 +42,7 @@ function DropImagePopup() {
         <input
           type="file"
           name="file"
-          accept="image/*"
+          accept="image/jpeg"
           className="block border px-3 py-1 w-full"
           onChange={(e) => changeHandler(e)}
         />

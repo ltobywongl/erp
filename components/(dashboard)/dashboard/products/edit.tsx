@@ -57,12 +57,31 @@ export default function Form({
           </select>
         </div>
         <div>
+          <label htmlFor="id">id</label>
+          <input
+            id="id"
+            name="id"
+            type="text"
+            defaultValue={product?.id}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="image">商品圖片</label>
+          <input
+            id="image"
+            name="image"
+            type="file"
+          />
+        </div>
+        <div>
           <label htmlFor="name">商品名稱</label>
           <input
             id="name"
             name="name"
             type="text"
             defaultValue={product?.name}
+            required
           />
         </div>
         <div>
@@ -73,6 +92,7 @@ export default function Form({
             type="number"
             step="0.01"
             defaultValue={product?.price}
+            required
           />
         </div>
         <div>
@@ -83,6 +103,7 @@ export default function Form({
             type="number"
             step="0.01"
             defaultValue={product?.discount}
+            required
           />
         </div>
         <div>
@@ -93,6 +114,17 @@ export default function Form({
             type="number"
             step="0.01"
             defaultValue={product?.couponPoint}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="stock">貨存</label>
+          <input
+            id="stock"
+            name="stock"
+            type="number"
+            defaultValue={product?.stock}
+            required
           />
         </div>
         <div>

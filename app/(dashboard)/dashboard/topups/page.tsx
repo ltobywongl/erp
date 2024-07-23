@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/ui/spinner";
+import { Topup } from "@prisma/client";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -10,11 +11,10 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
-  const [data, setData] = useState<Coupon[]>([]);
+  const [data, setData] = useState<Partial<Topup>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
@@ -25,21 +25,70 @@ function Page() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const columns = useMemo<ColumnDef<Coupon>[]>(
+  async function handleChangeStatus(id: string) {
+    const res = await fetch(`/api/topups/approve`, {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+      }),
+    });
+
+    if (res.ok) {
+      alert("修改成功");
+      setData((prevData) => {
+        return prevData.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              approved: true,
+            };
+          }
+          return item;
+        });
+      });
+    } else {
+      alert("修改失敗");
+    }
+  }
+
+  async function handleDownload(path: string) {
+    const res = await fetch(`/api/get-signed-url`, {
+      method: "POST",
+      body: JSON.stringify({
+        path,
+      }),
+    });
+
+    if (res.ok) {
+      const { url } = await res.json();
+      window.open(url, "_blank");
+    } else {
+      alert("下載失敗");
+    }
+  }
+
+  const columns = useMemo<ColumnDef<Partial<Topup>>[]>(
     () => [
       {
-        accessorKey: "username",
-        header: () => <div className="text-left">名稱</div>,
+        accessorKey: "amount",
+        header: () => <div className="text-left">價錢</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "email",
-        header: () => <div className="text-left">電郵</div>,
+        accessorKey: "imagePath",
+        cell: (value) => {
+          return (
+            <button onClick={() => handleDownload(value.getValue() as string)}>
+              開啟
+            </button>
+          );
+        },
+        header: () => <div className="text-left">證明</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "couponPoints",
-        header: () => <div className="text-left">積分</div>,
+        accessorKey: "approved",
+        header: () => <div className="text-left">已核准</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -49,20 +98,30 @@ function Page() {
         },
         header: () => <div className="text-left">創建時間</div>,
         footer: (props) => props.column.id,
+        filterFn: (row, columnId, filterValue) => {
+          const rowValue = row.getValue(columnId) as string;
+          const date = new Date(rowValue);
+          const filterDate = new Date(filterValue);
+          return date.toDateString() === filterDate.toDateString();
+        },
       },
       {
         accessorKey: "id",
         cell: (value) => {
           return (
-            <Link
-              href={`/dashboard/members/edit/${value.getValue()}`}
+            <button
+              onClick={() =>
+                confirm("確認?") &&
+                handleChangeStatus(value.getValue() as string)
+              }
             >
-              Edit
-            </Link>
+              核准
+            </button>
           );
         },
         enableColumnFilter: false,
-        header: () => <div className="text-left">修改</div>,
+        enableSorting: true,
+        header: () => <div className="text-left">詳細</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -103,7 +162,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/members?${queryParams}`);
+      const response = await fetch(`/api/topups?${queryParams}`);
       const result = await response.json();
 
       setIsLoading(false);
@@ -117,14 +176,6 @@ function Page() {
 
   return (
     <div className="p-2">
-      {/* <div className="p-2 flex gap-4">
-        <Link
-          href={"/dashboard/coupons/categories/create"}
-          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
-        >
-          新增禮卷種類
-        </Link>
-      </div> */}
       <div className="overflow-x-scroll">
         <table className="w-full">
           <thead>

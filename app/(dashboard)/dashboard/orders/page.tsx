@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/ui/spinner";
+import { Order } from "@prisma/client";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,7 +15,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
-  const [data, setData] = useState<Coupon[]>([]);
+  const [data, setData] = useState<Partial<Order>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
@@ -25,21 +26,48 @@ function Page() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const columns = useMemo<ColumnDef<Coupon>[]>(
+  async function handleChangeStatus(id: string, done: boolean) {
+    const res = await fetch(`/api/enquiries/revert-status`, {
+      method: "POST",
+      body: JSON.stringify({
+        id,
+        done,
+      }),
+    });
+
+    if (res.ok) {
+      alert("修改成功");
+      setData((prevData) => {
+        return prevData.map((item) => {
+          if (item.id === id) {
+            return {
+              ...item,
+              done: !done,
+            };
+          }
+          return item;
+        });
+      });
+    } else {
+      alert("修改失敗");
+    }
+  }
+
+  const columns = useMemo<ColumnDef<Partial<Order>>[]>(
     () => [
       {
-        accessorKey: "username",
-        header: () => <div className="text-left">名稱</div>,
+        accessorKey: "totalPrice",
+        header: () => <div className="text-left">價錢</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "email",
-        header: () => <div className="text-left">電郵</div>,
+        accessorKey: "receiverName",
+        header: () => <div className="text-left">收件人</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "couponPoints",
-        header: () => <div className="text-left">積分</div>,
+        accessorKey: "state",
+        header: () => <div className="text-left">狀態</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -49,20 +77,25 @@ function Page() {
         },
         header: () => <div className="text-left">創建時間</div>,
         footer: (props) => props.column.id,
+        filterFn: (row, columnId, filterValue) => {
+          const rowValue = row.getValue(columnId) as string;
+          const date = new Date(rowValue);
+          const filterDate = new Date(filterValue);
+          return date.toDateString() === filterDate.toDateString();
+        },
       },
       {
         accessorKey: "id",
         cell: (value) => {
           return (
-            <Link
-              href={`/dashboard/members/edit/${value.getValue()}`}
-            >
-              Edit
+            <Link href={`/dashboard/orders/details/${value.getValue()}`}>
+              詳細
             </Link>
           );
         },
         enableColumnFilter: false,
-        header: () => <div className="text-left">修改</div>,
+        enableSorting: true,
+        header: () => <div className="text-left">詳細</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -103,7 +136,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/members?${queryParams}`);
+      const response = await fetch(`/api/orders?${queryParams}`);
       const result = await response.json();
 
       setIsLoading(false);
@@ -117,14 +150,6 @@ function Page() {
 
   return (
     <div className="p-2">
-      {/* <div className="p-2 flex gap-4">
-        <Link
-          href={"/dashboard/coupons/categories/create"}
-          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
-        >
-          新增禮卷種類
-        </Link>
-      </div> */}
       <div className="overflow-x-scroll">
         <table className="w-full">
           <thead>

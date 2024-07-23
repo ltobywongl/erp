@@ -44,7 +44,12 @@ export default function Form({
             name="id"
             type="text"
             defaultValue={couponCategory?.id}
+            required
           />
+        </div>
+        <div>
+          <label htmlFor="image">Image</label>
+          <input id="image" name="image" type="file" />
         </div>
         <div>
           <label htmlFor="name">Name</label>
@@ -53,6 +58,7 @@ export default function Form({
             name="name"
             type="text"
             defaultValue={couponCategory?.name ?? ""}
+            required
           />
         </div>
         <div>
@@ -62,6 +68,7 @@ export default function Form({
             name="description"
             type="text"
             defaultValue={couponCategory?.description ?? ""}
+            required
           />
         </div>
         <div>
@@ -72,6 +79,17 @@ export default function Form({
             type="number"
             step="0.01"
             defaultValue={Number(couponCategory?.value) ?? 0}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="stock">Stock</label>
+          <input
+            id="stock"
+            name="stock"
+            type="number"
+            defaultValue={Number(couponCategory?.stock) ?? 0}
+            required
           />
         </div>
         <div>
@@ -82,6 +100,7 @@ export default function Form({
             type="number"
             step="0.01"
             defaultValue={couponCategory?.point}
+            required
           />
         </div>
         <div>

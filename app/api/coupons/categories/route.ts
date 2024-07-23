@@ -31,6 +31,11 @@ export async function GET(request: NextRequest) {
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
           if (key === "value") {
             acc["value"] = { equals: Number(value) };
+          } else if (key === "createdAt") {
+            acc["createdAt"] = {
+              gt: new Date(`${value} 00:00:00`),
+              lt: new Date(`${value} 23:59:59`),
+            };
           } else {
             acc[key] = { contains: value };
           }
@@ -61,6 +66,7 @@ export async function GET(request: NextRequest) {
         id: true,
         name: true,
         value: true,
+        stock: true,
         active: true,
         createdAt: true,
       },

@@ -30,7 +30,17 @@ export async function GET(request: NextRequest) {
         const filterObj = JSON.parse(filters);
         whereClause = Object.entries(filterObj).reduce((acc, [key, value]) => {
           if (key === "done") {
-            acc["done"] = { equals: value === "1" || value === "true" || value === true };
+            acc["done"] = {
+              equals:
+                value === "1" ||
+                "true".includes(String(value)) ||
+                value === true,
+            };
+          } else if (key === "createdAt") {
+            acc["createdAt"] = {
+              gt: new Date(`${value} 00:00:00`),
+              lt: new Date(`${value} 23:59:59`),
+            };
           } else {
             acc[key] = { contains: value };
           }

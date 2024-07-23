@@ -24,9 +24,6 @@ export async function generatePresignedUrl(bucket: string, path: string) {
     new GetObjectCommand({
       Bucket: bucket,
       Key: path,
-      ResponseContentType: path.endsWith(".pdf")
-        ? "application/pdf"
-        : "image/jpeg",
     })
   );
   return command;

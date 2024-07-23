@@ -27,12 +27,12 @@ function Page() {
 
   const columns = useMemo<ColumnDef<Product>[]>(
     () => [
-    {
+      {
         accessorKey: "categoryName",
         accessorFn: (row) => `${row.category.name}`,
         header: () => <div className="text-left">種類</div>,
         footer: (props) => props.column.id,
-    },
+      },
       {
         accessorKey: "name",
         header: () => <div className="text-left">名稱</div>,
@@ -65,9 +65,7 @@ function Page() {
         accessorKey: "id",
         cell: (value) => {
           return (
-            <Link
-              href={`/dashboard/products/edit/${value.getValue()}`}
-            >
+            <Link href={`/dashboard/products/edit/${value.getValue()}`}>
               Edit
             </Link>
           );
@@ -135,6 +133,20 @@ function Page() {
         >
           新增商品
         </Link>
+        <Link
+          href={"/dashboard/products/bulk-create"}
+          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+        >
+          CSV新增商品
+        </Link>
+        <Link
+          href={"/api/products/report"}
+          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+          download={true}
+          target="_blank"
+        >
+          製作商品報告
+        </Link>
       </div>
       <div className="overflow-x-scroll">
         <table className="w-full">
@@ -150,14 +162,12 @@ function Page() {
                     >
                       <div>
                         <div
-                          className={`bg-slate-100 p-2 border-b ${
+                          className={`flex bg-slate-100 p-2 border-b ${
                             header.column.getCanSort()
                               ? "cursor-pointer select-none"
                               : ""
                           }`}
-                          onClick={() =>
-                            header.column.getToggleSortingHandler()
-                          }
+                          onClick={header.column.getToggleSortingHandler()}
                         >
                           {flexRender(
                             header.column.columnDef.header,
@@ -170,14 +180,24 @@ function Page() {
                         </div>
                         {header.column.getCanFilter() ? (
                           <div className="p-2 border-b">
-                            <input
-                              className="border w-full rounded px-2 py-1 font-normal"
-                              placeholder="Filter"
-                              type="text"
-                              onChange={(e) =>
-                                header.column.setFilterValue(e.target.value)
-                              }
-                            />
+                            {header.column.id === "createdAt" ? (
+                              <input
+                                className="border w-full rounded px-2 py-1 font-normal"
+                                type="date"
+                                onChange={(e) =>
+                                  header.column.setFilterValue(e.target.value)
+                                }
+                              />
+                            ) : (
+                              <input
+                                className="border w-full rounded px-2 py-1 font-normal"
+                                placeholder="Filter"
+                                type="text"
+                                onChange={(e) =>
+                                  header.column.setFilterValue(e.target.value)
+                                }
+                              />
+                            )}
                           </div>
                         ) : (
                           <div className="p-2 border-b h-[51px]"></div>

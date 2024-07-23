@@ -37,6 +37,11 @@ export async function GET(request: NextRequest) {
             whereClause.category = {
               name: { contains: value },
             };
+          } else if (key === "createdAt") {
+            whereClause.createdAt = {
+              gt: new Date(`${value} 00:00:00`),
+              lt: new Date(`${value} 23:59:59`),
+            };
           } else {
             whereClause[key] = { contains: value };
           }
