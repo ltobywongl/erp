@@ -23,7 +23,7 @@ function PageContent() {
     signIn("credentials", {
       username,
       password,
-      callbackUrl: "/dashboard/members",
+      callbackUrl: "/dashboard",
     });
   }
 

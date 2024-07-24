@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "@/utils/prisma"
+import prisma from "@/utils/prisma";
 import * as bcrypt from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
@@ -23,7 +23,9 @@ export const authOptions: NextAuthOptions = {
             },
             where: {
               username: credentials?.username,
-              role: "admin",
+              role: {
+                in: ["admin", "staff"],
+              },
             },
           });
           if (!user) return null;

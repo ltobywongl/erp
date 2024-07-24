@@ -5,11 +5,14 @@ import Link from "next/link";
 import SIDE_BAR_ROUTES from "@/constants/sidebar";
 import * as Accordion from "@radix-ui/react-accordion";
 import { signOut } from "next-auth/react";
+import { User } from "next-auth";
 
 export default function NavigationHandler({
   children,
+  user,
 }: {
   children: ReactNode;
+  user: User;
 }) {
   const [open, setOpen] = useState(true);
   return (
@@ -41,7 +44,9 @@ export default function NavigationHandler({
         >
           {/* className="p-4 text-xs md:text-sm hover:text-highlight border-b" */}
           <Accordion.Root type="single" collapsible>
-            {SIDE_BAR_ROUTES.map((route, index) => {
+            {SIDE_BAR_ROUTES.filter((route) =>
+              route.role.includes(user.role)
+            ).map((route, index) => {
               return route.subRoutes.length > 0 ? (
                 <Accordion.Item
                   key={`route-${index}`}

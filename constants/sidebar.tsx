@@ -10,18 +10,21 @@ const SIDE_BAR_ROUTES = [
     path: "/dashboard",
     name: "Dashboard",
     icon: <DashboardIcon />,
+    role: ["admin", "staff"],
     subRoutes: [],
   },
   {
     path: "/dashboard/members",
     name: "Members",
     icon: <AvatorIcon />,
+    role: ["admin"],
     subRoutes: [],
   },
   {
     path: "/dashboard/products",
     name: "Products",
     icon: <ProductIcon />,
+    role: ["admin"],
     subRoutes: [
       {
         name: "Categories",
@@ -37,6 +40,7 @@ const SIDE_BAR_ROUTES = [
     path: "/dashboard/coupons/associated",
     name: "Coupons",
     icon: <CouponIcon />,
+    role: ["admin"],
     subRoutes: [
       {
         name: "Categories",
@@ -52,18 +56,42 @@ const SIDE_BAR_ROUTES = [
     path: "/dashboard/enquiries",
     name: "Enquiries",
     icon: <EnquiryIcon />,
+    role: ["admin"],
     subRoutes: [],
   },
   {
     path: "/dashboard/topups",
     name: "Topups",
     icon: <TopupIcon />,
+    role: ["admin"],
     subRoutes: [],
   },
   {
     path: "/dashboard/orders",
     name: "Orders",
     icon: <ProductIcon />,
+    role: ["admin"],
+    subRoutes: [],
+  },
+  {
+    path: "/dashboard/bookings",
+    name: "Bookings",
+    icon: <TopupIcon />,
+    role: ["admin"],
+    subRoutes: [],
+  },
+  {
+    path: "/dashboard/activities",
+    name: "Activities",
+    icon: <EnquiryIcon />,
+    role: ["admin", "staff"],
+    subRoutes: [],
+  },
+  {
+    path: "/dashboard/tasks",
+    name: "Tasks and Cases",
+    icon: <ProductIcon />,
+    role: ["admin", "staff"],
     subRoutes: [],
   },
 ];
