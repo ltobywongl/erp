@@ -199,7 +199,7 @@ model Task {
   description  String?   @db.VarChar(1000)
   deadline     DateTime? @db.DateTime(0)
   createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(0)
-  deletedAt    DateTime?  @map("deleted_at") @db.DateTime(0)
+  deletedAt    DateTime? @map("deleted_at") @db.DateTime(0)
   assignerUser User?     @relation(name: "assigner", fields: [assignerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_users_FK_1")
   assigneeUser User?     @relation(name: "assignee", fields: [assigneeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_users_FK")
 
@@ -212,9 +212,21 @@ model Opportunity {
   priority          Int      @db.Int
   contactNo         String?  @map("contact_no") @db.VarChar(20)
   contactName       String?  @map("contact_name") @db.VarChar(100)
-  state             String   @default("TODO") @db.VarChar(20)
+  state             String   @default("OPEN") @db.VarChar(20)
   opportunityAmount Float?   @map("opportunity_amount")
   createdAt         DateTime @default(now()) @map("created_at") @db.DateTime(0)
 
   @@map("opportunities")
+}
+
+model Deal {
+  id          String   @id @db.VarChar(36)
+  title       String   @db.VarChar(100)
+  contactNo   String?  @map("contact_no") @db.VarChar(20)
+  contactName String?  @map("contact_name") @db.VarChar(100)
+  state       String   @default("OPEN") @db.VarChar(20)
+  dealAmount  Float?   @map("deal_amount")
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime(0)
+
+  @@map("deals")
 }

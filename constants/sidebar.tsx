@@ -74,6 +74,13 @@ const SIDE_BAR_ROUTES = [
     subRoutes: [],
   },
   {
+    path: "/dashboard/reports",
+    name: "Reports",
+    icon: <CouponIcon />,
+    role: ["admin"],
+    subRoutes: [],
+  },
+  {
     path: "/dashboard/bookings",
     name: "Bookings",
     icon: <TopupIcon />,
@@ -92,6 +99,20 @@ const SIDE_BAR_ROUTES = [
     name: "Tasks and Cases",
     icon: <ProductIcon />,
     role: ["admin", "staff"],
+    subRoutes: [],
+  },
+  {
+    path: "/dashboard/opportunities",
+    name: "Opportunities",
+    icon: <EnquiryIcon />,
+    role: ["admin"],
+    subRoutes: [],
+  },
+  {
+    path: "/dashboard/deals",
+    name: "Deals",
+    icon: <EnquiryIcon />,
+    role: ["admin"],
     subRoutes: [],
   },
 ];

@@ -1,6 +1,7 @@
 "use client";
 
 import LoadingSpinner from "@/components/ui/spinner";
+import { Deal } from "@prisma/client";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,7 +15,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 function Page() {
-  const [data, setData] = useState<Coupon[]>([]);
+  const [data, setData] = useState<Deal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
@@ -25,21 +26,31 @@ function Page() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const columns = useMemo<ColumnDef<Coupon>[]>(
+  const columns = useMemo<ColumnDef<Deal>[]>(
     () => [
       {
-        accessorKey: "username",
+        accessorKey: "title",
         header: () => <div className="text-left">名稱</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "email",
-        header: () => <div className="text-left">電郵</div>,
+        accessorKey: "contactName",
+        header: () => <div className="text-left">聯絡人</div>,
         footer: (props) => props.column.id,
       },
       {
-        accessorKey: "couponPoints",
-        header: () => <div className="text-left">積分</div>,
+        accessorKey: "contactNo",
+        header: () => <div className="text-left">聯絡電話</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "state",
+        header: () => <div className="text-left">狀態</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "dealAmount",
+        header: () => <div className="text-left">價值</div>,
         footer: (props) => props.column.id,
       },
       {
@@ -48,6 +59,19 @@ function Page() {
           return new Date(value.getValue() as string).toLocaleString();
         },
         header: () => <div className="text-left">創建時間</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "id",
+        cell: (value) => {
+          return (
+            <Link href={`/dashboard/deals/edit/${value.getValue()}`}>
+              Edit
+            </Link>
+          );
+        },
+        enableColumnFilter: false,
+        header: () => <div className="text-left">修改</div>,
         footer: (props) => props.column.id,
       },
     ],
@@ -88,7 +112,7 @@ function Page() {
         ),
       });
 
-      const response = await fetch(`/api/members?${queryParams}`);
+      const response = await fetch(`/api/deals?${queryParams}`);
       const result = await response.json();
 
       setIsLoading(false);
@@ -102,6 +126,14 @@ function Page() {
 
   return (
     <div className="p-2">
+      <div className="p-2 flex gap-4">
+        <Link
+          href={"/dashboard/deals/create"}
+          className="px-4 py-2 bg-blue-500 text-white font-bold rounded-lg"
+        >
+            Create Deal
+        </Link>
+      </div>
       <div className="overflow-x-scroll">
         <table className="w-full">
           <thead>
@@ -183,7 +215,7 @@ function Page() {
               })
             ) : isLoading ? (
               <tr>
-                <td className="py-2 border-b" colSpan={4}>
+                <td className="py-2 border-b" colSpan={7}>
                   <LoadingSpinner />
                 </td>
               </tr>
@@ -191,7 +223,7 @@ function Page() {
               <tr>
                 <td
                   className="py-2 text-center font-bold text-xl border-b"
-                  colSpan={4}
+                  colSpan={7}
                 >
                   沒有合適的欄
                 </td>

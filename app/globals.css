@@ -23,7 +23,7 @@ main > div {
 }
 
 table > thead > tr > th > div > :first-child {
-  @apply text-nowrap
+  @apply text-nowrap min-w-20
 }
 
 form > div > input, form > div > select, form > div > textarea {
