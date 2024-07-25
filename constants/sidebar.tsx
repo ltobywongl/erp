@@ -81,6 +81,13 @@ const SIDE_BAR_ROUTES = [
     subRoutes: [],
   },
   {
+    path: "/dashboard/tasks",
+    name: "Tasks and Cases",
+    icon: <ProductIcon />,
+    role: ["admin", "staff"],
+    subRoutes: [],
+  },
+  {
     path: "/dashboard/bookings",
     name: "Bookings",
     icon: <TopupIcon />,
@@ -91,13 +98,6 @@ const SIDE_BAR_ROUTES = [
     path: "/dashboard/activities",
     name: "Activities",
     icon: <EnquiryIcon />,
-    role: ["admin", "staff"],
-    subRoutes: [],
-  },
-  {
-    path: "/dashboard/tasks",
-    name: "Tasks and Cases",
-    icon: <ProductIcon />,
     role: ["admin", "staff"],
     subRoutes: [],
   },

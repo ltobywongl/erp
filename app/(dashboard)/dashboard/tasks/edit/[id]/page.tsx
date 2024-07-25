@@ -15,7 +15,7 @@ async function Page({ params }: { params: { id: string } }) {
       session.user.role === "admin"
         ? {
             role: {
-              in: ["admin", "user"],
+              in: ["admin", "staff"],
             },
           }
         : {
@@ -26,7 +26,7 @@ async function Page({ params }: { params: { id: string } }) {
   const assigneeList = await prisma.user.findMany({
     where: {
       role: {
-        in: ["admin", "user"],
+        in: ["admin", "staff"],
       },
     },
   });
