@@ -26,7 +26,7 @@ table > thead > tr > th > div > :first-child {
   @apply text-nowrap
 }
 
-form > div > input, form > div > select {
+form > div > input, form > div > select, form > div > textarea {
   @apply flex w-full border border-slate-300 rounded-md shadow-sm px-3 py-1 focus-visible:outline-none focus-visible:ring-1 text-sm;
 }
 

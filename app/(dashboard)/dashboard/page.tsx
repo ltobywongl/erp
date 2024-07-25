@@ -33,7 +33,7 @@ FROM orders WHERE created_at >= NOW() - INTERVAL 7 DAY GROUP BY saleDate ORDER B
         </div>
       </div>
       <div className="col-span-2">
-        銷售
+        <div className="font-bold">銷售</div>
         <div>
           <SalesChart
             formatDate={true}

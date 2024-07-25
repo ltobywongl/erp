@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
               gt: new Date(`${value} 00:00:00`),
               lt: new Date(`${value} 23:59:59`),
             };
+          } else if (key === "user") {
+            acc.creator = { username: { contains: value } };
           } else {
             acc[key] = { contains: value };
           }

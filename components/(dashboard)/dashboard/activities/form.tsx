@@ -12,7 +12,7 @@ export default function Form() {
     e.preventDefault();
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
-    const response = await fetch("/api/coupons/categories/create", {
+    const response = await fetch("/api/activities/create", {
       method: "POST",
       body: formData,
     });
@@ -20,7 +20,7 @@ export default function Form() {
     if (!response.ok) {
       setError(data.error);
     } else {
-      router.push("/dashboard/coupons/categories");
+      router.push("/dashboard/activities");
     }
     setIsLoading(false);
   }
@@ -31,22 +31,22 @@ export default function Form() {
         className="w-2/3 h-2/3 p-6 border border-slate-300 rounded-md flex flex-col gap-4 overflow-y-scroll custom-scrollbar"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <h1 className="text-2xl font-bold">Create Coupon Category</h1>
+        <h1 className="text-2xl font-bold">Create activity</h1>
         <div>
-          <label htmlFor="name">Name</label>
-          <input id="name" name="name" type="text" />
+          <label htmlFor="title">Title</label>
+          <input id="title" name="title" type="text" required />
         </div>
         <div>
-          <label htmlFor="description">Description</label>
-          <input id="description" name="description" type="text" />
+          <label htmlFor="start">Start time</label>
+          <input id="start" name="start" type="time" required />
         </div>
         <div>
-          <label htmlFor="value">Value</label>
-          <input id="value" name="value" type="number" step="0.01" />
+          <label htmlFor="end">End time</label>
+          <input id="end" name="end" type="time" required />
         </div>
         <div>
-          <label htmlFor="point">Point(s) to exchange</label>
-          <input id="point" name="point" type="number" step="0.01" />
+          <label htmlFor="date">Date</label>
+          <input id="date" name="date" type="date" required />
         </div>
         <p className="text-sm text-red-500">{error}</p>
         <button

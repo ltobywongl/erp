@@ -23,7 +23,8 @@ model User {
   topups       Topup[]
   enquiries    Enquiry[]
   Booking      Booking[]
-  Task         Task[]
+  TaskAssigner Task[]     @relation(name: "assigner")
+  TaskAssignee Task[]     @relation(name: "assignee")
   Activity     Activity[]
 
   @@map("users")
@@ -191,15 +192,16 @@ model Activity {
 
 model Task {
   id           String    @id @db.VarChar(36)
-  assignee     String?   @db.VarChar(100)
+  assignerId   String?   @map("assigner_id") @db.VarChar(36)
   assigneeId   String?   @map("assignee_id") @db.VarChar(36)
-  assigner     String?   @db.VarChar(100)
   state        String    @default("TODO") @db.VarChar(20)
   title        String    @db.VarChar(100)
   description  String?   @db.VarChar(1000)
   deadline     DateTime? @db.DateTime(0)
   createdAt    DateTime  @default(now()) @map("created_at") @db.DateTime(0)
-  assigneeUser User?     @relation(fields: [assigneeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_users_FK")
+  deletedAt    DateTime?  @map("deleted_at") @db.DateTime(0)
+  assignerUser User?     @relation(name: "assigner", fields: [assignerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_users_FK_1")
+  assigneeUser User?     @relation(name: "assignee", fields: [assigneeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "tasks_users_FK")
 
   @@map("tasks")
 }
