@@ -28,12 +28,16 @@ function Page() {
     const data = Object.fromEntries(formData.entries());
 
     const queryParams = new URLSearchParams({
+      name: pdfType,
       amount: data.amount.toString(),
-      items: JSON.stringify(items.current),
       date: data.date.toString(),
+      companyName: data.companyName.toString(),
+      companyAddress: data.companyAddress.toString(),
+      companyEmail: data.companyEmail.toString(),
+      items: JSON.stringify(items.current),
     });
 
-    setPdfUrl(`/api/reports/${pdfType}?${queryParams}`);
+    setPdfUrl(`/api/reports?${queryParams}`);
   }
 
   return (
@@ -57,7 +61,19 @@ function Page() {
         </div>
         <div>
           <label htmlFor="amount">Total Amount</label>
-          <input type="number" step={0.01} id="amount" name="amount" />
+          <input type="number" step={0.01} id="amount" name="amount" required />
+        </div>
+        <div>
+          <label htmlFor="companyName">Company Name</label>
+          <input type="text" id="companyName" name="companyName" />
+        </div>
+        <div>
+          <label htmlFor="companyAddress">Company Address</label>
+          <input type="text" id="companyAddress" name="companyAddress" />
+        </div>
+        <div>
+          <label htmlFor="companyEmail">Company Email</label>
+          <input type="text" id="companyEmail" name="companyEmail" />
         </div>
         <div>
           <label htmlFor="date">Date</label>
