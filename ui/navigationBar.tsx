@@ -19,7 +19,7 @@ export default function NavigationHandler({
     <div className="h-full flex flex-col max-h-dvh">
       <div className="w-full z-50 flex items-center justify-between px-3 md:px-6 py-3 md:py-4 bg-gradient-to-b from-blue-100 to-blue-200">
         <h1 className="text-xl md:text-2xl font-bold">
-          <Link href={"/"}>ERP</Link>
+          <Link href={"/"}>企業資源規劃系統</Link>
         </h1>
         <div className="flex items-center gap-4 md:gap-6">
           <div
@@ -32,7 +32,7 @@ export default function NavigationHandler({
             onClick={() => signOut({ callbackUrl: "/signin" })}
             className="cursor-pointer"
           >
-            Signout
+            登出
           </div>
         </div>
       </div>
