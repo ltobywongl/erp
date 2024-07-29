@@ -16,7 +16,7 @@ const about = await prisma.websiteContent.findMany({
   },
   where: {
     key: {
-      in: ["about-us", "address", "email", "tel"],
+      in: ["about-us", "address", "email", "tel", "terms"],
     },
   },
 });
@@ -25,13 +25,15 @@ const about = await prisma.websiteContent.findMany({
     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-2 [&>div]:border [&>div]:rounded-md [&>div]:p-2 [&>div]:bg-slate-50 overflow-y-scroll custom-scrollbar">
       <div className="col-span-1">
         <div className="font-bold">關於我們</div>
-        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "about-us")?.content} key="about-us" />
+        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "about-us")?.content} contentKey="about-us" />
         <div className="font-bold">電郵</div>
-        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "email")?.content} key="email" />
+        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "email")?.content} contentKey="email" />
         <div className="font-bold">聯絡地址</div>
-        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "address")?.content} key="address" />
+        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "address")?.content} contentKey="address" />
         <div className="font-bold">聯絡電話</div>
-        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "tel")?.content} key="tel" />
+        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "tel")?.content} contentKey="tel" />
+        <div className="font-bold">條款及細則</div>
+        <UpdateWebsiteContents defaultValue={about.find((c) => c.key === "terms")?.content} contentKey="terms" />
       </div>
       <div className="col-span-2">
         <div className="font-bold">銷售</div>

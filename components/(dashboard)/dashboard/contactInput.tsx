@@ -4,15 +4,15 @@ import { FormEvent } from "react";
 
 function UpdateWebsiteContents({
   defaultValue,
-  key,
+  contentKey,
 }: {
   defaultValue?: string;
-  key: string;
+  contentKey: string;
 }) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    formData.append("key", key);
+    formData.append("key", contentKey);
 
     const res = await fetch("/api/update-website-content", {
       method: "POST",
