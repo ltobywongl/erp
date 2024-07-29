@@ -75,9 +75,9 @@ const Quotation = ({ props }: { props: QuotationProps }) => {
             <Text style={styles.w40}>Quantity</Text>
             <Text style={styles.w20}>Unit Price</Text>
           </View>
-          {props.items?.map((item) => {
+          {props.items?.map((item, idx) => {
             return (
-              <View style={styles.tableRow}>
+              <View style={styles.tableRow} key={`item-${idx}`}>
                 <Text style={styles.w40}>{item.name}</Text>
                 <Text style={styles.w40}>{item.quantity}</Text>
                 <Text style={styles.w20}>{item.amount}</Text>
@@ -91,7 +91,12 @@ const Quotation = ({ props }: { props: QuotationProps }) => {
         </View>
         <View style={styles.section}>
           <Text>Authorized by</Text>
-          <Text style={[styles.w40, { borderBottom: "1px solid black", height: "24px" }]}></Text>
+          <Text
+            style={[
+              styles.w40,
+              { borderBottom: "1px solid black", height: "24px" },
+            ]}
+          ></Text>
         </View>
       </Page>
     </Document>

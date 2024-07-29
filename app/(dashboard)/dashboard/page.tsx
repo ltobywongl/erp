@@ -1,6 +1,7 @@
 import SalesChart from "@/components/(dashboard)/dashboard/chart";
 import UpdateAboutUs from "@/components/(dashboard)/dashboard/contactInput";
 import DropImageBanner from "@/components/(dashboard)/dashboard/dropImageBanner";
+import DropImageIcon from "@/components/(dashboard)/dashboard/dropImageIcon";
 import DropImagePopup from "@/components/(dashboard)/dashboard/dropImagePopup";
 import prisma from "@/utils/prisma";
 export default async function Page() {
@@ -27,10 +28,8 @@ FROM orders WHERE created_at >= NOW() - INTERVAL 7 DAY GROUP BY saleDate ORDER B
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-2 p-2 [&>div]:border [&>div]:rounded-md [&>div]:p-2 [&>div]:bg-slate-50 overflow-y-scroll custom-scrollbar">
       <div className="col-span-1">
-        <div className="font-bold text-xl">
-          <span>會員人數:</span>
-          <span>{userCount}</span>
-        </div>
+        <div className="font-bold">關於我們</div>
+        <UpdateAboutUs defaultValue={about?.content} />
       </div>
       <div className="col-span-2">
         <div className="font-bold">銷售</div>
@@ -57,9 +56,10 @@ FROM orders WHERE created_at >= NOW() - INTERVAL 7 DAY GROUP BY saleDate ORDER B
         <DropImageBanner />
       </div>
       <div className="col-span-1">
-        <div className="font-bold">關於我們</div>
-        <UpdateAboutUs defaultValue={about?.content} />
+        <div className="font-bold">公司標誌</div>
+        <DropImageIcon />
       </div>
+      <div className="col-span-1"></div>
       <div className="col-span-3"></div>
     </div>
   );

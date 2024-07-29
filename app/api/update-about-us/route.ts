@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
     const rawFormData = await request.formData();
     const formData = {
-      content: rawFormData.get("bucket"),
+      content: rawFormData.get("content"),
     };
 
     if (!formData.content) {

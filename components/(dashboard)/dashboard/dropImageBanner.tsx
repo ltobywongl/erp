@@ -1,14 +1,17 @@
 "use client";
 
+import LoadingSpinner from "@/components/ui/spinner";
 import { FormEvent, ChangeEvent, useState } from "react";
 
 function DropImageBanner() {
+  const [isLoading, setIsLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState<string>(
     "https://erp-shop-public.s3.ap-northeast-1.amazonaws.com/images/banner.jpg"
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     formData.append("path", `images/banner.jpg`);
     formData.append("bucket", "erp-shop-public");
@@ -21,6 +24,7 @@ function DropImageBanner() {
     } else {
       alert("Failed");
     }
+    setIsLoading(false);
   }
 
   function changeHandler(e: ChangeEvent<HTMLInputElement>) {
@@ -35,7 +39,7 @@ function DropImageBanner() {
         <img
           src={previewFile}
           className="aspect-square h-72 w-72 object-contain border"
-          alt="Popup Image"
+          alt="Banner"
         />
       </div>
       <form onSubmit={handleSubmit}>
@@ -50,7 +54,7 @@ function DropImageBanner() {
           className="block w-full px-3 py-1 rounded text-white bg-green-500 hover:bg-green-400"
           type="submit"
         >
-          提交
+          {isLoading ? <LoadingSpinner /> : "提交"}
         </button>
       </form>
     </div>
