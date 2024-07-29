@@ -15,18 +15,19 @@ export async function POST(request: NextRequest) {
     const rawFormData = await request.formData();
     const formData = {
       content: rawFormData.get("content"),
+      key: rawFormData.get("key"),
     };
 
-    if (!formData.content) {
+    if (typeof formData.content === "undefined" || !formData.key) {
       return errorResponse("Bad Request", 400);
     }
 
     await prisma.websiteContent.update({
       data: {
-        content: formData.content.toString(),
+        content: formData.content?.toString() ?? "",
       },
       where: {
-        key: "about-us",
+        key: formData.key.toString(),
       },
     });
 

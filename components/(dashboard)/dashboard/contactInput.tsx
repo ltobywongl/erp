@@ -2,12 +2,19 @@
 
 import { FormEvent } from "react";
 
-function UpdateAboutUs({ defaultValue }: { defaultValue?: string }) {
+function UpdateWebsiteContents({
+  defaultValue,
+  key,
+}: {
+  defaultValue?: string;
+  key: string;
+}) {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
+    formData.append("key", key);
 
-    const res = await fetch("/api/update-about-us", {
+    const res = await fetch("/api/update-website-content", {
       method: "POST",
       body: formData,
     });
@@ -25,7 +32,7 @@ function UpdateAboutUs({ defaultValue }: { defaultValue?: string }) {
           name="content"
           className="block border px-3 py-1 w-full"
           defaultValue={defaultValue}
-          rows={12}
+          rows={2}
         />
         <button
           className="block w-full px-3 py-1 rounded text-white bg-green-500 hover:bg-green-400"
@@ -38,4 +45,4 @@ function UpdateAboutUs({ defaultValue }: { defaultValue?: string }) {
   );
 }
 
-export default UpdateAboutUs;
+export default UpdateWebsiteContents;

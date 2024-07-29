@@ -38,6 +38,21 @@ function Page() {
         footer: (props) => props.column.id,
       },
       {
+        accessorKey: "age",
+        header: () => <div className="text-left">年齡</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "gender",
+        header: () => <div className="text-left">性別</div>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "balance",
+        header: () => <div className="text-left">結餘</div>,
+        footer: (props) => props.column.id,
+      },
+      {
         accessorKey: "couponPoints",
         header: () => <div className="text-left">積分</div>,
         footer: (props) => props.column.id,
@@ -183,7 +198,7 @@ function Page() {
               })
             ) : isLoading ? (
               <tr>
-                <td className="py-2 border-b" colSpan={4}>
+                <td className="py-2 border-b" colSpan={7}>
                   <LoadingSpinner />
                 </td>
               </tr>
@@ -191,7 +206,7 @@ function Page() {
               <tr>
                 <td
                   className="py-2 text-center font-bold text-xl border-b"
-                  colSpan={4}
+                  colSpan={7}
                 >
                   沒有合適的欄
                 </td>
