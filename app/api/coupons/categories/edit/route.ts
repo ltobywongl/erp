@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     if (formData.image) {
       await uploadBlob(
-        "erp-shop-public",
+        "publicen",
         `images/coupons/${formData.id}.jpg`,
         formData.image as File
       );

@@ -39,7 +39,7 @@ export default function Form({
         <h1 className="text-2xl font-bold">Bulk Create Product</h1>
         <Link
           className="text-blue-500 font-bold underline"
-          href="https://erp-shop-public.s3.ap-northeast-1.amazonaws.com/sample.csv"
+          href="https://publicen.s3.ap-northeast-1.amazonaws.com/sample.csv"
           download={true}
           target="_blank"
         >

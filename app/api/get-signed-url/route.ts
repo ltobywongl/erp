@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
 
-    const file = await generatePresignedUrl("erp-shop-private", body.path);
+    const file = await generatePresignedUrl("privateen", body.path);
 
     return NextResponse.json({ url: file });
   } catch (e: any) {

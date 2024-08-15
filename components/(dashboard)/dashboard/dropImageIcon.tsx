@@ -6,7 +6,7 @@ import { FormEvent, ChangeEvent, useState } from "react";
 function DropImageIcon() {
   const [isLoading, setIsLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState<string>(
-    "https://erp-shop-public.s3.ap-northeast-1.amazonaws.com/images/icon.jpg"
+    "https://publicen.s3.ap-northeast-1.amazonaws.com/images/icon.jpg"
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -14,7 +14,7 @@ function DropImageIcon() {
     setIsLoading(true);
     const formData = new FormData(e.currentTarget);
     formData.append("path", `images/icon.jpg`);
-    formData.append("bucket", "erp-shop-public");
+    formData.append("bucket", "publicen");
     const res = await fetch("/api/upload-file", {
       method: "POST",
       body: formData,
