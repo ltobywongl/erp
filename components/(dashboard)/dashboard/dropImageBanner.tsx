@@ -6,7 +6,7 @@ import { FormEvent, ChangeEvent, useState } from "react";
 function DropImageBanner() {
   const [isLoading, setIsLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState<string>(
-    "https://publicen.s3.ap-northeast-1.amazonaws.com/images/banner.jpg"
+    "https://publicen.s3.ap-southeast-2.amazonaws.com/images/banner.jpg"
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {

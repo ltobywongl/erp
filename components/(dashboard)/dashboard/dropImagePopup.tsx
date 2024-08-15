@@ -6,7 +6,7 @@ import { FormEvent, ChangeEvent, useState } from "react";
 function DropImagePopup() {
   const [isLoading, setIsLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState<string>(
-    "https://publicen.s3.ap-northeast-1.amazonaws.com/images/popup.jpg"
+    "https://publicen.s3.ap-southeast-2.amazonaws.com/images/popup.jpg"
   );
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
